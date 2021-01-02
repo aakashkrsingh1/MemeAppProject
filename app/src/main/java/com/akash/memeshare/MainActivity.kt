@@ -1,16 +1,16 @@
 package com.akash.memeshare
 
 import android.content.Intent
-import android.graphics.Bitmap
+
 import android.graphics.drawable.Drawable
-import android.net.Uri
+
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.os.Environment
+
 import android.util.Log
 import android.view.View
 import android.widget.Toast
-import androidx.core.content.ContextCompat
+
 import com.android.volley.Request
 import com.android.volley.Response
 import com.android.volley.toolbox.JsonObjectRequest
@@ -21,10 +21,7 @@ import com.bumptech.glide.load.engine.GlideException
 import com.bumptech.glide.request.RequestListener
 import com.bumptech.glide.request.target.Target
 import kotlinx.android.synthetic.main.activity_main.*
-import java.io.ByteArrayOutputStream
-import java.io.File
-import java.io.FileOutputStream
-import java.io.IOException
+
 
 
 class MainActivity : AppCompatActivity() {
@@ -35,10 +32,14 @@ class MainActivity : AppCompatActivity() {
         loadmeme()
     }
     private fun loadmeme(){
+/* function to load the meme */
 
-        val queue= Volley.newRequestQueue(this)
+        //  NOT USED WHEN SINGLETON PATTERN IS USED val queue= Volley.newRequestQueue(this)
+        //meme url below
         val url = "https://meme-api.herokuapp.com/gimme"
         LoadingBar.visibility=View.VISIBLE
+        //Json Object Request
+
         val jsonObjectRequest = JsonObjectRequest(
             Request.Method.GET, url, null,
             Response.Listener { response ->
@@ -54,7 +55,7 @@ class MainActivity : AppCompatActivity() {
                         LoadingBar.visibility=View.GONE
 
                         return false
-                        //To change body of created functions use File | Settings | File Templates.
+                        //
                     }
 
                     override fun onResourceReady(
@@ -75,23 +76,24 @@ class MainActivity : AppCompatActivity() {
             },
             Response.ErrorListener { error ->
                 // TODO: Handle error
-                Toast.makeText(this,"Something Went wrong",Toast.LENGTH_LONG).show()
+                Toast.makeText(this,"Something Went Wrong ",Toast.LENGTH_LONG).show()
             }
         )
-        queue.add(jsonObjectRequest)
+        MySingleton.getInstance(this).addToRequestQueue(jsonObjectRequest)
 
     }
 
 
     fun shareMeme(view: View) {
-        Log.d("Button Log", "share button pressed")
+        Log.d("Button Log", "The share meme button was pressed. ")
         val i = Intent(Intent.ACTION_SEND)
         i.type = "text/plain"
-        i.putExtra(Intent.EXTRA_TEXT, "Hi, checkout this meme $currentMemeUrl")
+        i.putExtra(Intent.EXTRA_TEXT, "Hey, checkout this cool meme I found, on Akash's Meme Share app, $currentMemeUrl")
+
         startActivity(Intent.createChooser(i, "Share this meme with"))
     }
     fun nextMeme(view: View) {
-        Log.d("Button Log", "next meme button pressed ")
+        Log.d("Button Log", "The Next meme Button was pressed. ")
         loadmeme()
 
     }
